@@ -53,11 +53,11 @@ public class RevenueCatManager: ObservableObject, ErrorManagable, SubscriptionMa
     }
 
     private func loadPackages() {
-        let allStoreProducts = getAllProducts()
+        let allStoreProducts = getAllProducts().map { $0.storeProduct }
         for var subscription in subscriptionResponse?.subscriptions ?? [] {
             for subscriptionPack in subscription.packages ?? [] {
-                let product = allStoreProducts.first(where: {$0.identifier == subscriptionPack.id})
-                if let appStoreProduct = product?.storeProduct {
+                let product = allStoreProducts.first(where: {$0.productIdentifier == subscriptionPack.id})
+                if let appStoreProduct = product {
                     if  var subscriptionPack = subscription.packages?.first(where: {$0.id == appStoreProduct.productIdentifier }) {
                         let duration = getDuration(product: appStoreProduct)
                         let price: SubscriptionPrice = .init(price: appStoreProduct.price)
