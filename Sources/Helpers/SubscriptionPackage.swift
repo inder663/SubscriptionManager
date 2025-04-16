@@ -183,7 +183,7 @@ struct Subscription: Codable {
 
 // MARK: - Response Container
 
-struct SubscriptionResponse: Codable {
+public struct SubscriptionResponse: Codable {
     let subscriptions: [Subscription]
     var packages: [SubscriptionPackage]?
 

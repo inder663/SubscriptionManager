@@ -13,11 +13,11 @@ import Combine
 open class SubscriptionManager: ObservableObject, SubscriptionManageable, LoaderManageable, ErrorManagable {
     @ObservedObject private var apphudManager: ApphudManager
     @ObservedObject private var revenueCatManager: RevenueCatManager
-    @Published var isLoading: Bool = false
-    @Published var isActive: Bool = false
-    @Published var error: SubscriptionError?
-    @Published var isShowError: Bool = false
-    @Published var subscriptionResponse: SubscriptionResponse?
+    @Published public var isLoading: Bool = false
+    @Published public var isActive: Bool = false
+    @Published public var error: SubscriptionError?
+    @Published public var isShowError: Bool = false
+    @Published public var subscriptionResponse: SubscriptionResponse?
     private let conifuguration: SubscriptionManager.Configuration
     private var cancellable = Set<AnyCancellable>()
 
