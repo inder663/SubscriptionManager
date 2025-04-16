@@ -64,10 +64,10 @@ public class RevenueCatManager: ObservableObject, ErrorManagable, SubscriptionMa
                         subscriptionPack.update(price: price)
                         subscriptionPack.update(duration: duration)
                         subscription.update(package: subscriptionPack)
-                        subscriptionResponse?.update(subscription: subscription)
                     }
                 }
             }
+            subscriptionResponse?.update(subscription: subscription)
         }
 
     }
