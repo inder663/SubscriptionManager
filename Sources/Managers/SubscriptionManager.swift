@@ -68,6 +68,18 @@ open class SubscriptionManager: ObservableObject, SubscriptionManageable, Loader
             }
             .store(in: &cancellable)
 
+        apphudManager.$error
+            .sink { error in
+                self.error = error
+            }
+            .store(in: &cancellable)
+
+        apphudManager.$isShowError
+            .sink { isShowError in
+                self.isShowError = isShowError
+            }
+            .store(in: &cancellable)
+
         apphudManager.objectWillChange.sink { [weak self] (_) in
                   self?.objectWillChange.send()
         }.store(in: &cancellable)
@@ -105,6 +117,18 @@ open class SubscriptionManager: ObservableObject, SubscriptionManageable, Loader
         revenueCatManager.$subscriptionResponse
             .sink { subscriptionResponse in
                 self.subscriptionResponse = subscriptionResponse
+            }
+            .store(in: &cancellable)
+
+        revenueCatManager.$error
+            .sink { error in
+                self.error = error
+            }
+            .store(in: &cancellable)
+
+        revenueCatManager.$isShowError
+            .sink { isShowError in
+                self.isShowError = isShowError
             }
             .store(in: &cancellable)
 
