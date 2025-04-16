@@ -9,6 +9,7 @@ import SwiftUI
 import Combine
 
 @MainActor
+@available(iOS 13.0, *)
 open class SubscriptionManager: ObservableObject, SubscriptionManageable, LoaderManageable, ErrorManagable {
     @ObservedObject private var apphudManager: ApphudManager
     @ObservedObject private var revenueCatManager: RevenueCatManager

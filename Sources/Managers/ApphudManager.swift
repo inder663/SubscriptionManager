@@ -10,7 +10,9 @@ import SwiftUI
 import StoreKit
 import Foundation
 
+
 @MainActor
+@available(iOS 13.0, *)
 class ApphudManager: ObservableObject, ErrorManagable, SubscriptionManageable, LoaderManageable {
     @Published var placements: [ApphudPlacement] = []
     @Published var json: [String: Any]?

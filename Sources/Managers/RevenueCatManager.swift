@@ -8,7 +8,7 @@
 import SwiftUI
 import RevenueCat
 
-
+@available(iOS 13.0, *)
 class RevenueCatManager: ObservableObject, ErrorManagable, SubscriptionManageable, LoaderManageable {
     @Published var error: SubscriptionError?
     @Published var isShowError: Bool = false
