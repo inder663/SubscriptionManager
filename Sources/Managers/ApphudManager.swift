@@ -66,16 +66,24 @@ public class ApphudManager: ObservableObject, ErrorManagable, SubscriptionManage
     }
 
     private func loadPackages() {
-        let allProducts = getAllProducts()
-        var products: [SubscriptionPackage] = []
-        for product in allProducts {
-            guard let product = product.product else {
-                return
+        let allPaywalls = placements.map({$0.paywall})
+        for paywall in allPaywalls {
+            if var subscription = subscriptionResponse?.subscriptions.first(where: {$0.identifier == paywall?.identifier}), let products = paywall?.products {
+                for product in products {
+                    if let appStoreProduct = product.product {
+                        if  var subscriptionPack = subscription.packages?.first(where: {$0.id == appStoreProduct.id }) {
+                            let duration = getDuration(product: appStoreProduct)
+                            let price: SubscriptionPrice = .init(price: appStoreProduct.price)
+                            subscriptionPack.update(price: price)
+                            subscriptionPack.update(duration: duration)
+                            subscription.update(package: subscriptionPack)
+                            subscriptionResponse?.update(subscription: subscription)
+                        }
+                    }
+                }
+
             }
-            let subscrptionPackage: SubscriptionPackage = .init(id: product.id, price: .init(price: product.price), duration: getDuration(product: product))
-            products.append(subscrptionPackage)
         }
-        self.subscriptionResponse?.update(packages: products)
     }
 
     private func getDuration(product: Product) -> SubscriptionDuration {

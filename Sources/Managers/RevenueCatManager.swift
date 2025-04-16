@@ -53,15 +53,23 @@ public class RevenueCatManager: ObservableObject, ErrorManagable, SubscriptionMa
     }
 
     private func loadPackages() {
-        let allProducts = getAllProducts()
-        var products: [SubscriptionPackage] = []
-        for product in allProducts {
-            let product = product.storeProduct
-
-            let subscrptionPackage: SubscriptionPackage = .init(id: product.productIdentifier, price: .init(price: product.price), duration: getDuration(product: product))
-            products.append(subscrptionPackage)
+        let allStoreProducts = getAllProducts()
+        for var subscription in subscriptionResponse?.subscriptions ?? [] {
+            for subscriptionPack in subscription.packages ?? [] {
+                let product = allStoreProducts.first(where: {$0.identifier == subscriptionPack.id})
+                if let appStoreProduct = product?.storeProduct {
+                    if  var subscriptionPack = subscription.packages?.first(where: {$0.id == appStoreProduct.productIdentifier }) {
+                        let duration = getDuration(product: appStoreProduct)
+                        let price: SubscriptionPrice = .init(price: appStoreProduct.price)
+                        subscriptionPack.update(price: price)
+                        subscriptionPack.update(duration: duration)
+                        subscription.update(package: subscriptionPack)
+                        subscriptionResponse?.update(subscription: subscription)
+                    }
+                }
+            }
         }
-        self.subscriptionResponse?.update(packages: products)
+
     }
 
     private func getDuration(product: StoreProduct) -> SubscriptionDuration {

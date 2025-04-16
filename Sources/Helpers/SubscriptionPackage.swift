@@ -124,7 +124,6 @@ public struct ComponentButton: Codable {
 // MARK: - Offer & Package
 
 public struct SubscriptionOffer: Codable {
-    public let packId: String
     public let text: String?
 }
 
@@ -132,22 +131,38 @@ public struct SubscriptionPrice {
     public let price: Decimal?
 }
 
-public struct SubscriptionPackage {
+public struct SubscriptionPackage: Decodable {
     public let id: String
-    public let price: SubscriptionPrice
-    public let duration: SubscriptionDuration
+    public var price: SubscriptionPrice?
+    public var duration: SubscriptionDuration?
+    public let offer: SubscriptionOffer?
+
+    enum CodingKeys: String, CodingKey {
+        case id
+        case offer
+    }
+
     public var displayPrice: String {
         let numberFormatter = NumberFormatter()
         numberFormatter.numberStyle = .currency
         numberFormatter.locale = .current
         
-        if let priceDecimal = price.price {
+        if let priceDecimal = price?.price {
             let priceString = numberFormatter.string(from: NSNumber(value: priceDecimal.doubleValue)) ?? "-"
-            let duration = duration.getDuration(format: .durationAdjective)
+            let duration = duration?.getDuration(format: .durationAdjective) ?? ""
             return priceString + "/" + duration
         }
         return ""
     }
+
+    mutating func update(price: SubscriptionPrice?) {
+        self.price = price
+    }
+
+    mutating func update(duration: SubscriptionDuration?) {
+        self.duration = duration
+    }
+
 }
 
 // MARK: - Paywall Placeholder
@@ -161,14 +176,14 @@ public struct SubscriptionPaywall {
 
 // MARK: - Main Subscription Model
 
-public struct StoreSubscription: Codable {
+public struct StoreSubscription: Decodable {
     public let identifier: String
     public let titles: [String]?
     public let subTitles: [String]?
     public let singlePackText: String?
     public let isShowCloseButton: Bool?
     public let isShowSkipButton: Bool?
-    public let offers: [SubscriptionOffer]?
+    public var packages: [SubscriptionPackage]?
 
     enum CodingKeys: String, CodingKey {
         case identifier
@@ -176,8 +191,17 @@ public struct StoreSubscription: Codable {
         case subTitles
         case isShowCloseButton
         case singlePackText
-        case offers
         case isShowSkipButton
+        case packages
+    }
+
+    mutating func update(packages: [SubscriptionPackage]) {
+        self.packages = packages
+    }
+
+    mutating func update(package: SubscriptionPackage) {
+        packages?.removeAll(where: {$0.id == package.id})
+        packages?.append(package)
     }
 
 
@@ -186,16 +210,20 @@ public struct StoreSubscription: Codable {
 
 // MARK: - Response Container
 
-public struct SubscriptionResponse: Codable {
-    public let subscriptions: [StoreSubscription]
-    public var packages: [SubscriptionPackage]?
+public struct SubscriptionResponse: Decodable {
+    public var subscriptions: [StoreSubscription]
+   // public var packages: [SubscriptionPackage]?
 
     enum CodingKeys: String, CodingKey {
         case subscriptions
     }
 
-    public mutating func update(packages: [SubscriptionPackage]) {
-        self.packages = packages
+    public mutating func update(subscription: StoreSubscription) {
+        if let index = subscriptions.firstIndex(where: { $0.identifier == subscription.identifier }) {
+            subscriptions[index] = subscription
+        } else {
+            subscriptions.append(subscription)
+        }
     }
 }
 
