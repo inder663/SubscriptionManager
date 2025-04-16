@@ -142,5 +142,9 @@ public extension SubscriptionManager {
     }
     struct Configuration {
         let type: PlatformType
+
+        public init(type: PlatformType) {
+            self.type = type
+        }
     }
 }
