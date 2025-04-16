@@ -13,24 +13,24 @@ import Foundation
 
 @MainActor
 @available(iOS 13.0, *)
-class ApphudManager: ObservableObject, ErrorManagable, SubscriptionManageable, LoaderManageable {
-    @Published var placements: [ApphudPlacement] = []
-    @Published var json: [String: Any]?
-    @Published var isLoading: Bool = false
-    @Published var isActive: Bool = false
-    @Published var error: SubscriptionError?
-    @Published var isShowError = false
-    @Published var subscriptionResponse: SubscriptionResponse?
+public class ApphudManager: ObservableObject, ErrorManagable, SubscriptionManageable, LoaderManageable {
+    @Published public var placements: [ApphudPlacement] = []
+    @Published public var json: [String: Any]?
+    @Published public var isLoading: Bool = false
+    @Published public var isActive: Bool = false
+    @Published public var error: SubscriptionError?
+    @Published public var isShowError = false
+    @Published public var subscriptionResponse: SubscriptionResponse?
 
     private static var appStoreProducts = Set<Product>()
 
     private var key: String
 
-    init(key: String) {
+    public init(key: String) {
         self.key = key
     }
 
-    func start() {
+    public func start() {
         Apphud.start(apiKey: key) {[weak self] user in
             self?.fetchPlacements()
         }
@@ -117,25 +117,25 @@ class ApphudManager: ObservableObject, ErrorManagable, SubscriptionManageable, L
     }
 
 
-    func getPlacement(id: String) -> ApphudPlacement? {
+    public func getPlacement(id: String) -> ApphudPlacement? {
         placements.first(where: {$0.identifier == id})
     }
 
-    func getProducts(of placement: ApphudPlacement) -> [ApphudProduct] {
+    public func getProducts(of placement: ApphudPlacement) -> [ApphudProduct] {
         placement.paywall?.products ?? []
     }
 
-    func getPaywall(of placement: ApphudPlacement) -> ApphudPaywall? {
+    public func getPaywall(of placement: ApphudPlacement) -> ApphudPaywall? {
         placement.paywall
     }
 
-    func getAllProducts() -> [ApphudProduct] {
+    public func getAllProducts() -> [ApphudProduct] {
         placements
             .compactMap{$0.paywall?.products}
             .flatMap{$0}
     }
 
-    func loadAppStoreProducts(completion: @escaping ()->Void) {
+    public func loadAppStoreProducts(completion: @escaping ()->Void) {
         let dispatchGroup = DispatchGroup()
         for product in getAllProducts() {
             dispatchGroup.enter()
@@ -164,20 +164,20 @@ class ApphudManager: ObservableObject, ErrorManagable, SubscriptionManageable, L
         return product
     }
 
-    func getAppStoreProduct(of subscriptionPackage: SubscriptionPackage) -> Product? {
+    public func getAppStoreProduct(of subscriptionPackage: SubscriptionPackage) -> Product? {
         guard
             let apphudProduct = getAllProducts().first(where: {$0.productId == subscriptionPackage.id}),
             let appStoreProduct = ApphudManager.getAppStoreProduct(of: apphudProduct) else { return nil }
         return appStoreProduct
     }
 
-    func getAllPlacements() -> [ApphudPlacement] {
+    public func getAllPlacements() -> [ApphudPlacement] {
         return placements
     }
 
     // Purchase
 
-    func purchase(product: SubscriptionPackage) {
+    public func purchase(product: SubscriptionPackage) {
         guard let apphudProduct = getAllProducts().first(where: {$0.productId == product.id})  else {
             let message = "Product not found!"
             self.error = .init(message: message)
@@ -197,7 +197,7 @@ class ApphudManager: ObservableObject, ErrorManagable, SubscriptionManageable, L
         }
     }
 
-    func restore() {
+    public func restore() {
         isLoading = true
         Apphud.restorePurchases {[weak self] _, _, error in
             self?.isLoading = false
@@ -213,16 +213,16 @@ class ApphudManager: ObservableObject, ErrorManagable, SubscriptionManageable, L
 
 @MainActor
 extension ApphudProduct {
-    var product: Product? {
+    public var product: Product? {
         ApphudManager.getAppStoreProduct(of: self)
     }
 
-    enum DurationFormat {
+    public enum DurationFormat {
         case durationOnly // Week, Month, Year
         case durationAdjective // Weekly, Monthly, Yearly
     }
 
-    func getDuration(format: DurationFormat) -> String {
+    public func getDuration(format: DurationFormat) -> String {
         var unit = ""
         guard let product = product else { return unit }
         switch product.subscription?.subscriptionPeriod {
@@ -248,51 +248,10 @@ extension ApphudProduct {
         return unit
     }
 
-    func getPriceText(format: DurationFormat, isWeekly: Bool = false) -> String {
-        return product?.displayPrice ?? ""
-    }
-
-    //    func getProductWeeklyPrice() -> String {
-    //        guard let product else { return "" }
-    //        let price = product.price
-    //        let numberFormatter = NumberFormatter()
-    //        numberFormatter.numberStyle = .currency
-    //        numberFormatter.locale = .current
-    //
-    //        var divideBy: Double = 1
-    //        let u = Double(product.subscription?.subscriptionPeriod.value ?? 1)
-    //        switch product.subscription?.subscriptionPeriod {
-    //        case .everySixMonths:
-    //            divideBy = Double(4.34 * 6 * u)
-    //        case .everyThreeDays:
-    //            // Assuming the price is for monthly or yearly subscription and you want to scale down accordingly
-    //            divideBy = Double(4.34 * 365 / 3 * u) // 365 days / 3 days = 121.67 periods per year
-    //        case .everyThreeMonths:
-    //            divideBy = Double(4.34 * 4 * u) // 4 quarters in a year
-    //
-    //        case .everyTwoMonths:
-    //            divideBy = Double(4.34 * 6 * u) // 6 periods per year
-    //        case .everyTwoWeeks:
-    //            divideBy = Double(4.34 * 26 * u) // 26 periods per year (52 weeks / 2)
-    //        case .weekly:
-    //            divideBy = Double(4.34 * 52 * u) // 52 weeks in a year
-    //        case .monthly:
-    //            divideBy = Double(4.34 * 12 * u) // 12 months in a year
-    //        case .yearly:
-    //            divideBy = Double(4.34 * u) // 1 period per year
-    //        default:
-    //            divideBy = 1
-    //        }
-    //
-    //        let weeklyPrice = price / Decimal(divideBy)
-    //
-    //        let priceString = numberFormatter.string(from: NSNumber(value: weeklyPrice.doubleValue))
-    //        return priceString ?? ""
-    //    }
 }
 
 extension Decimal {
-    var doubleValue:Double {
+    public var doubleValue:Double {
         return NSDecimalNumber(decimal:self).doubleValue
     }
 }

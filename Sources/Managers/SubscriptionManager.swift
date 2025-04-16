@@ -13,15 +13,15 @@ import Combine
 open class SubscriptionManager: ObservableObject, SubscriptionManageable, LoaderManageable, ErrorManagable {
     @ObservedObject private var apphudManager: ApphudManager
     @ObservedObject private var revenueCatManager: RevenueCatManager
-    @Published var isLoading: Bool = false
-    @Published var isActive: Bool = false
-    @Published var error: SubscriptionError?
-    @Published var isShowError: Bool = false
-    @Published var subscriptionResponse: SubscriptionResponse?
+    @Published public var isLoading: Bool = false
+    @Published public var isActive: Bool = false
+    @Published public var error: SubscriptionError?
+    @Published public var isShowError: Bool = false
+    @Published public var subscriptionResponse: SubscriptionResponse?
     private let conifuguration: SubscriptionManager.Configuration
     private var cancellable = Set<AnyCancellable>()
 
-    init(_ configuration: SubscriptionManager.Configuration) {
+    public init(_ configuration: SubscriptionManager.Configuration) {
         self.conifuguration = configuration
         switch configuration.type {
         case .apphud(let key):
@@ -113,7 +113,7 @@ open class SubscriptionManager: ObservableObject, SubscriptionManageable, Loader
         }.store(in: &cancellable)
     }
 
-    func restoreSubscription() {
+    public func restoreSubscription() {
         let type = conifuguration.type
         switch type {
         case .apphud(_):
@@ -123,7 +123,7 @@ open class SubscriptionManager: ObservableObject, SubscriptionManageable, Loader
         }
     }
 
-    func purchase(package: SubscriptionPackage) {
+   public func purchase(package: SubscriptionPackage) {
         let type = conifuguration.type
         switch type {
         case .apphud(_):
@@ -136,11 +136,11 @@ open class SubscriptionManager: ObservableObject, SubscriptionManageable, Loader
 }
 
 extension SubscriptionManager {
-    enum PlatformType {
+    public enum PlatformType {
         case apphud(key: String)
         case revenueCat(key: String, entitlementId: String)
     }
-    struct Configuration {
+    public struct Configuration {
         let type: PlatformType
     }
 }

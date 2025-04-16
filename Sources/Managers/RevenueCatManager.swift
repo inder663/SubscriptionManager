@@ -9,29 +9,29 @@ import SwiftUI
 import RevenueCat
 
 @available(iOS 13.0, *)
-class RevenueCatManager: ObservableObject, ErrorManagable, SubscriptionManageable, LoaderManageable {
-    @Published var error: SubscriptionError?
-    @Published var isShowError: Bool = false
-    @Published var isLoading: Bool = false
-    @Published var json: [String: Any]?
-    @Published var offerings: Offerings?
-    @Published var isActive: Bool = false
-    @Published var subscriptionResponse: SubscriptionResponse?
+public class RevenueCatManager: ObservableObject, ErrorManagable, SubscriptionManageable, LoaderManageable {
+    @Published public var error: SubscriptionError?
+    @Published public var isShowError: Bool = false
+    @Published public var isLoading: Bool = false
+    @Published public var json: [String: Any]?
+    @Published public var offerings: Offerings?
+    @Published public var isActive: Bool = false
+    @Published public var subscriptionResponse: SubscriptionResponse?
     private let entitlementId: String
     private let key: String
-    init(key: String, entitlementId: String, isLogEnabled: Bool = true) {
+    public init(key: String, entitlementId: String, isLogEnabled: Bool = true) {
         self.entitlementId = entitlementId
         self.key = key
         Purchases.logLevel = .debug
     }
 
-    func start() {
+    public func start() {
         Purchases.configure(withAPIKey: key)
         fetchOffering()
         updateSubscriptionStatus()
     }
 
-    func fetchOffering() {
+    public func fetchOffering() {
         isLoading = true
         Purchases.shared.getOfferings {[weak self] (offerings, error) in
             self?.isLoading = false
@@ -82,11 +82,11 @@ class RevenueCatManager: ObservableObject, ErrorManagable, SubscriptionManageabl
     }
 
 
-    func getAllProducts() -> [Package] {
+    public func getAllProducts() -> [Package] {
         return offerings?.current?.availablePackages ?? []
     }
 
-    func purchase(product: SubscriptionPackage) {
+    public func purchase(product: SubscriptionPackage) {
         guard let revenuePackage = getAllProducts().first(where: {$0.identifier == product.id }) else {
             let message = "Product not found!"
             self.error = .init(message: message)
@@ -103,7 +103,7 @@ class RevenueCatManager: ObservableObject, ErrorManagable, SubscriptionManageabl
         }
     }
 
-    func updateSubscriptionStatus() {
+    public func updateSubscriptionStatus() {
         Purchases.shared.getCustomerInfo(completion: {[weak self] info, error in
             if let error = error {
                 self?.error = .init(message: error.localizedDescription)
@@ -114,7 +114,7 @@ class RevenueCatManager: ObservableObject, ErrorManagable, SubscriptionManageabl
         })
     }
 
-    func restore() {
+    public func restore() {
         self.isLoading = true
         Purchases.shared.restorePurchases {[weak self] (purchaserInfo, error) in
             self?.isLoading = false

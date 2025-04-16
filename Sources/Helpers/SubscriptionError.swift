@@ -5,7 +5,7 @@
 //  Created by USER on 09/04/25.
 //
 
-struct SubscriptionError {
+public struct SubscriptionError {
     let title: String = "Error"
     let message: String
 }
