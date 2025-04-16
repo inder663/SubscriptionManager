@@ -9,7 +9,7 @@ import SwiftUI
 import Combine
 
 @MainActor
-class SubscriptionManager: ObservableObject, SubscriptionManageable, LoaderManageable, ErrorManagable {
+open class SubscriptionManager: ObservableObject, SubscriptionManageable, LoaderManageable, ErrorManagable {
     @ObservedObject private var apphudManager: ApphudManager
     @ObservedObject private var revenueCatManager: RevenueCatManager
     @Published var isLoading: Bool = false

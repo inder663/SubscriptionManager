@@ -131,7 +131,7 @@ struct SubscriptionPrice {
     let price: Decimal?
 }
 
-struct SubscriptionPackage {
+open struct SubscriptionPackage {
     let id: String
     let price: SubscriptionPrice
     let duration: SubscriptionDuration
