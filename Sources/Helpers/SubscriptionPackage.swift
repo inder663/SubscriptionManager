@@ -11,11 +11,11 @@ import SwiftUI
 
 // MARK: - Enums
 
-enum StateType: String, Codable {
+public enum StateType: String, Codable, Sendable {
     case active, normal
 }
 
-enum SubscriptionDuration {
+public enum SubscriptionDuration {
     case weekly, monthly, yearly, lifetime
     case days(Int)
     case months(Double)
@@ -28,12 +28,12 @@ enum SubscriptionDuration {
     case everyTwoWeeks
 
 
-    enum DurationFormat {
+    public enum DurationFormat {
         case durationOnly // Week, Month, Year
         case durationAdjective // Weekly, Monthly, Yearly
     }
 
-    func getDuration(format: DurationFormat) -> String {
+    public func getDuration(format: DurationFormat) -> String {
         var unit = ""
         switch self {
         case .everySixMonths:
@@ -73,25 +73,26 @@ enum SubscriptionDuration {
 
 // MARK: - UI Models
 
-struct ComponentBorder: Codable {
-    let width: Double
-    let colors: [String]?
+public struct ComponentBorder: Codable, Sendable {
+    public let width: Double
+    public let colors: [String]?
 }
 
-struct FontData: Codable {
-    let name: String
-    let size: Double
-    let weight: String
+public struct FontData: Codable, Sendable {
+    public let name: String
+    public let size: Double
+    public let weight: String
 }
 
-struct ComponentStateUI: Codable {
-    let foregroundColors: [String]?
-    let backgroundColors: [String]?
-    let border: ComponentBorder?
-    let font: FontData?
-    let cornerRadius: Int?
 
-    static let `default`: ComponentStateUI = ComponentStateUI(
+public struct ComponentStateUI: Codable, Sendable {
+    public let foregroundColors: [String]?
+    public let backgroundColors: [String]?
+    public let border: ComponentBorder?
+    public let font: FontData?
+    public let cornerRadius: Int?
+
+    public static let `default`: ComponentStateUI = ComponentStateUI(
         foregroundColors: ["#000000"],
         backgroundColors: ["#ffffff"],
         border: nil,
@@ -100,42 +101,42 @@ struct ComponentStateUI: Codable {
     )
 }
 
-struct ComponentState: Codable {
-    let type: StateType
-    let ui: ComponentStateUI
+public struct ComponentState: Codable, Sendable {
+    public let type: StateType
+    public let ui: ComponentStateUI
 
-    static let `default` = ComponentState(type: .normal, ui: .default)
+    public static let `default` = ComponentState(type: .normal, ui: .default)
 }
 
 // MARK: - Text & Button
 
-struct TextComponent: Codable {
-    let id: String
-    let text: String?
-    let image: String?
-    let states: [ComponentState]
+public struct TextComponent: Codable {
+    public let id: String
+    public let text: String?
+    public let image: String?
+    public let states: [ComponentState]
 }
 
-struct ComponentButton: Codable {
-    let title: TextComponent?
+public struct ComponentButton: Codable {
+    public let title: TextComponent?
 }
 
 // MARK: - Offer & Package
 
-struct SubscriptionOffer: Codable {
-    let packId: String
-    let text: String?
+public struct SubscriptionOffer: Codable {
+    public let packId: String
+    public let text: String?
 }
 
-struct SubscriptionPrice {
-    let price: Decimal?
+public struct SubscriptionPrice {
+    public let price: Decimal?
 }
 
 public struct SubscriptionPackage {
-    let id: String
-    let price: SubscriptionPrice
-    let duration: SubscriptionDuration
-    var displayPrice: String {
+    public let id: String
+    public let price: SubscriptionPrice
+    public let duration: SubscriptionDuration
+    public var displayPrice: String {
         let numberFormatter = NumberFormatter()
         numberFormatter.numberStyle = .currency
         numberFormatter.locale = .current
@@ -151,22 +152,22 @@ public struct SubscriptionPackage {
 
 // MARK: - Paywall Placeholder
 
-struct SubscriptionPaywall {
-    let id: String
-    let identifier: String
-    let packages: [SubscriptionPackage]?
-    let json: [String: Any]?
+public struct SubscriptionPaywall {
+    public let id: String
+    public let identifier: String
+    public let packages: [SubscriptionPackage]?
+    public let json: [String: Any]?
 }
 
 // MARK: - Main Subscription Model
 
-struct Subscription: Codable {
-    let identifier: String
-    let titles: [String]?
-    let subTitles: [String]?
-    let singlePackText: String?
-    let isShowCloseButton: Bool?
-    let offers: [SubscriptionOffer]?
+public struct Subscription: Codable {
+    public let identifier: String
+    public let titles: [String]?
+    public let subTitles: [String]?
+    public let singlePackText: String?
+    public let isShowCloseButton: Bool?
+    public let offers: [SubscriptionOffer]?
 
     enum CodingKeys: String, CodingKey {
         case identifier
@@ -184,20 +185,20 @@ struct Subscription: Codable {
 // MARK: - Response Container
 
 public struct SubscriptionResponse: Codable {
-    let subscriptions: [Subscription]
-    var packages: [SubscriptionPackage]?
+    public let subscriptions: [Subscription]
+    public var packages: [SubscriptionPackage]?
 
     enum CodingKeys: String, CodingKey {
         case subscriptions
     }
 
-    mutating func update(packages: [SubscriptionPackage]) {
+    public mutating func update(packages: [SubscriptionPackage]) {
         self.packages = packages
     }
 }
 
 extension SubscriptionResponse {
-    static func decode(from data: [String: Any]) -> SubscriptionResponse? {
+    public static func decode(from data: [String: Any]) -> SubscriptionResponse? {
         do {
 
             // 2. Convert to JSON data
