@@ -135,12 +135,12 @@ open class SubscriptionManager: ObservableObject, SubscriptionManageable, Loader
 
 }
 
-extension SubscriptionManager {
-    public enum PlatformType {
+public extension SubscriptionManager {
+    enum PlatformType {
         case apphud(key: String)
         case revenueCat(key: String, entitlementId: String)
     }
-    public struct Configuration {
+    struct Configuration {
         let type: PlatformType
     }
 }

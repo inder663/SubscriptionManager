@@ -6,6 +6,6 @@
 //
 
 public struct SubscriptionError {
-    let title: String = "Error"
-    let message: String
+    public let title: String = "Error"
+    public let message: String
 }

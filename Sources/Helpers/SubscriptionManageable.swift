@@ -8,7 +8,7 @@
 import SwiftUI
 
 @MainActor
-protocol SubscriptionManageable: ObservableObject {
+public protocol SubscriptionManageable: ObservableObject {
     var isActive: Bool { get set }
 
 }

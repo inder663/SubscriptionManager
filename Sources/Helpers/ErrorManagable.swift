@@ -8,7 +8,7 @@
 import SwiftUI
 
 @MainActor
-protocol ErrorManagable: ObservableObject {
+public protocol ErrorManagable: ObservableObject {
     var error: SubscriptionError? { get set }
     var isShowError: Bool { get set }
 }
