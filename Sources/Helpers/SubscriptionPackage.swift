@@ -167,6 +167,7 @@ public struct StoreSubscription: Codable {
     public let subTitles: [String]?
     public let singlePackText: String?
     public let isShowCloseButton: Bool?
+    public let isShowSkipButton: Bool?
     public let offers: [SubscriptionOffer]?
 
     enum CodingKeys: String, CodingKey {
@@ -176,6 +177,7 @@ public struct StoreSubscription: Codable {
         case isShowCloseButton
         case singlePackText
         case offers
+        case isShowSkipButton
     }
 
 
