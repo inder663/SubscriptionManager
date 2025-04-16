@@ -161,7 +161,7 @@ public struct SubscriptionPaywall {
 
 // MARK: - Main Subscription Model
 
-public struct Subscription: Codable {
+public struct StoreSubscription: Codable {
     public let identifier: String
     public let titles: [String]?
     public let subTitles: [String]?
@@ -185,7 +185,7 @@ public struct Subscription: Codable {
 // MARK: - Response Container
 
 public struct SubscriptionResponse: Codable {
-    public let subscriptions: [Subscription]
+    public let subscriptions: [StoreSubscription]
     public var packages: [SubscriptionPackage]?
 
     enum CodingKeys: String, CodingKey {
