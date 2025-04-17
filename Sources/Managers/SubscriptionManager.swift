@@ -169,6 +169,10 @@ open class SubscriptionManager: ObservableObject, SubscriptionManageable, Loader
         subscriptionResponse?.subscriptions.first(where: {$0.identifier == id })
     }
 
+    open func getStyles() -> [UIStyle] {
+        subscriptionResponse?.styles ?? []
+    }
+
 }
 
 public extension SubscriptionManager {
