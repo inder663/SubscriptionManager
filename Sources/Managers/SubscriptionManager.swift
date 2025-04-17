@@ -157,6 +157,10 @@ open class SubscriptionManager: ObservableObject, SubscriptionManageable, Loader
         }
     }
 
+    open func getSubscription(with id: String) -> StoreSubscription? {
+        subscriptionResponse?.subscriptions.first(where: {$0.identifier == id })
+    }
+
 }
 
 public extension SubscriptionManager {
