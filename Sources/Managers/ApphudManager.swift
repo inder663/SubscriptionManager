@@ -64,15 +64,15 @@ public class ApphudManager: ObservableObject, ErrorManagable, SubscriptionManage
             let paywall = placement.paywall
             let paywallId = paywall?.identifier ?? "none"
             let json = paywall?.json
-            self.paywallJsons?[paywallId] = json
+            self.paywallJsons[paywallId] = json
         }
-        if let paywallJsons = paywallJsons {
+        
             var collectiveJson: [String: Any] = [:]
             for (key,value) in paywallJsons {
                 collectiveJson = collectiveJson.merging(value) { (current, new) in new }
             }
             json = ["subscriptions":collectiveJson]
-        }
+
 
 
         if let data = json {
