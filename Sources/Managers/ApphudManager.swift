@@ -71,7 +71,7 @@ public class ApphudManager: ObservableObject, ErrorManagable, SubscriptionManage
         var subscriptionsJson: [[String: Any]] = []
         for (key,value) in paywallJsons {
             let paywallJson = value as [String: Any]
-            let style = paywallJson["styles"] as? [String: Any]
+            let style = paywallJson["styles"] as? [[String: Any]]
             let subscriptions =  paywallJson["subscriptions"] as? [String: Any]
             if !(style?.isEmpty ?? true) {
                     styleJson["styles"] = style
