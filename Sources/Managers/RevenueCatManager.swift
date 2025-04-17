@@ -69,7 +69,7 @@ public class RevenueCatManager: ObservableObject, ErrorManagable, SubscriptionMa
             }
             subscriptionResponse?.update(subscription: subscription)
         }
-
+        self.objectWillChange.send()
     }
 
     private func getDuration(product: StoreProduct) -> SubscriptionDuration {

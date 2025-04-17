@@ -84,6 +84,7 @@ public class ApphudManager: ObservableObject, ErrorManagable, SubscriptionManage
 
             }
         }
+        self.objectWillChange.send()
     }
 
     private func getDuration(product: Product) -> SubscriptionDuration {
