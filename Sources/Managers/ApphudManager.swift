@@ -67,13 +67,21 @@ public class ApphudManager: ObservableObject, ErrorManagable, SubscriptionManage
             self.paywallJsons[paywallId] = json
         }
 
-        var collectiveJson: [[String: Any]] = []
+        var styleJson: [String: Any] = [:]
+        var subscriptionsJson: [[String: Any]] = []
         for (key,value) in paywallJsons {
-            collectiveJson.append(value)
+            if key == "styles" {
+                if !value.isEmpty {
+                    styleJson["styles"] = value
+                }
+            }
+            if key == "subscriptions" {
+                subscriptionsJson.append(value)
+            }
         }
         json = [
-            "styles": collectiveJson.first?["styles"],
-            "subscriptions":collectiveJson
+            "styles": styleJson,
+            "subscriptions":subscriptionsJson
         ]
 
 
@@ -204,7 +212,7 @@ public class ApphudManager: ObservableObject, ErrorManagable, SubscriptionManage
     }
 
     // Purchase
-    
+
     public func purchase(product: SubscriptionPackage, completion:((Bool)->Void)?) {
         guard let apphudProduct = getAllProducts().first(where: {$0.productId == product.id})  else {
             let message = "Product not found!"
