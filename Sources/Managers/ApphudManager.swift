@@ -22,7 +22,7 @@ public class ApphudManager: ObservableObject, ErrorManagable, SubscriptionManage
     @Published public var isShowError = false
     @Published public var subscriptionResponse: SubscriptionResponse?
 
-    @Published private var paywallJsons:[String:[String:Any]]?
+    @Published private var paywallJsons:[String:[String:Any]] = [:]
 
     private static var appStoreProducts = Set<Product>()
 
