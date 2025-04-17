@@ -22,6 +22,8 @@ public class ApphudManager: ObservableObject, ErrorManagable, SubscriptionManage
     @Published public var isShowError = false
     @Published public var subscriptionResponse: SubscriptionResponse?
 
+    @Published private var paywallJsons:[String:[String:Any]]?
+
     private static var appStoreProducts = Set<Product>()
 
     private var key: String
@@ -58,7 +60,21 @@ public class ApphudManager: ObservableObject, ErrorManagable, SubscriptionManage
     }
 
     private func loadJson(from placements: [ApphudPlacement]?) {
-        json = placements?.first?.paywall?.json
+        for placement in self.placements {
+            let paywall = placement.paywall
+            let paywallId = paywall?.identifier ?? "none"
+            let json = paywall?.json
+            self.paywallJsons?[paywallId] = json
+        }
+        if let paywallJsons = paywallJsons {
+            var collectiveJson: [String: Any] = [:]
+            for (key,value) in paywallJsons {
+                collectiveJson = collectiveJson.merging(value) { (current, new) in new }
+            }
+            json = ["subscriptions":collectiveJson]
+        }
+
+
         if let data = json {
             self.subscriptionResponse = SubscriptionResponse.decode(from: data)
             self.loadPackages()
