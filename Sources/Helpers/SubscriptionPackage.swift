@@ -164,20 +164,10 @@ public struct SubscriptionPackage: Decodable {
     public var price: SubscriptionPrice?
     public var duration: SubscriptionDuration?
     public let offer: SubscriptionOffer?
-    public let titleStyleId: String?
-    public let subTitleStyleId: String?
-    public let continueButtonStyleId: String?
-    public let durationTextStyleId: String?
-    public let priceTextStyleId: String?
 
     enum CodingKeys: String, CodingKey {
         case id
         case offer
-        case titleStyleId
-        case subTitleStyleId
-        case continueButtonStyleId
-        case durationTextStyleId
-        case priceTextStyleId
     }
 
     public var displayPrice: String {
@@ -224,6 +214,8 @@ public struct StoreSubscription: Decodable {
     public let titleStyleId: String?
     public let subTitleStyleId: String?
     public let continueButtonStyleId: String?
+    public let durationTextStyleId: String?
+    public let priceTextStyleId: String?
     public var packages: [SubscriptionPackage]?
 
     enum CodingKeys: String, CodingKey {
@@ -237,6 +229,8 @@ public struct StoreSubscription: Decodable {
         case titleStyleId
         case subTitleStyleId
         case continueButtonStyleId
+        case durationTextStyleId
+        case priceTextStyleId
 
     }
 
