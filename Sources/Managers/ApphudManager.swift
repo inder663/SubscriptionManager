@@ -29,6 +29,7 @@ public class ApphudManager: ObservableObject, ErrorManagable, SubscriptionManage
     private var key: String
 
     public init(key: String) {
+        ApphudManager.appStoreProducts.removeAll()
         self.key = key
     }
 

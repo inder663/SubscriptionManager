@@ -81,7 +81,7 @@ open class SubscriptionManager: ObservableObject, SubscriptionManageable, Loader
             .store(in: &cancellable)
 
         apphudManager.objectWillChange.sink { [weak self] (_) in
-                  self?.objectWillChange.send()
+            self?.objectWillChange.send()
         }.store(in: &cancellable)
 
     }
@@ -133,7 +133,7 @@ open class SubscriptionManager: ObservableObject, SubscriptionManageable, Loader
             .store(in: &cancellable)
 
         revenueCatManager.objectWillChange.sink { [weak self] (_) in
-                  self?.objectWillChange.send()
+            self?.objectWillChange.send()
         }.store(in: &cancellable)
     }
 
@@ -151,7 +151,7 @@ open class SubscriptionManager: ObservableObject, SubscriptionManageable, Loader
         }
     }
 
-   public func purchase(package: SubscriptionPackage, completion:((Bool)->Void)? = nil) {
+    public func purchase(package: SubscriptionPackage, completion:((Bool)->Void)? = nil) {
         let type = conifuguration.type
         switch type {
         case .apphud(_):
