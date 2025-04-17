@@ -125,6 +125,34 @@ public struct ComponentButton: Codable {
 
 public struct SubscriptionOffer: Codable {
     public let text: String?
+    public let styleId: String?
+
+}
+
+// MARK: - Style
+struct Style: Codable {
+    let id: String
+    let font: Font?
+    let color: Color?
+    let border: Border?
+}
+
+// MARK: - Border
+struct Border: Codable {
+    let width: Int?
+    let color: String?
+    let radius: Int?
+}
+
+// MARK: - Color
+struct Color: Codable {
+    let foreground, background: [String]?
+}
+
+// MARK: - Font
+struct Font: Codable {
+    let size: Int?
+    let weight: String?
 }
 
 public struct SubscriptionPrice {
@@ -136,10 +164,20 @@ public struct SubscriptionPackage: Decodable {
     public var price: SubscriptionPrice?
     public var duration: SubscriptionDuration?
     public let offer: SubscriptionOffer?
+    public let titleStyleId: String?
+    public let subTitleStyleId: String?
+    public let continueButtonStyleId: String?
+    public let durationTextStyleId: String?
+    public let priceTextStyleId: String?
 
     enum CodingKeys: String, CodingKey {
         case id
         case offer
+        case titleStyleId
+        case subTitleStyleId
+        case continueButtonStyleId
+        case durationTextStyleId
+        case priceTextStyleId
     }
 
     public var displayPrice: String {
@@ -183,6 +221,9 @@ public struct StoreSubscription: Decodable {
     public let singlePackText: String?
     public let isShowCloseButton: Bool?
     public let isShowSkipButton: Bool?
+    public let titleStyleId: String?
+    public let subTitleStyleId: String?
+    public let continueButtonStyleId: String?
     public var packages: [SubscriptionPackage]?
 
     enum CodingKeys: String, CodingKey {
@@ -193,6 +234,10 @@ public struct StoreSubscription: Decodable {
         case singlePackText
         case isShowSkipButton
         case packages
+        case titleStyleId
+        case subTitleStyleId
+        case continueButtonStyleId
+
     }
 
     mutating func update(packages: [SubscriptionPackage]) {
@@ -207,12 +252,35 @@ public struct StoreSubscription: Decodable {
 
 }
 
+public struct FontStyle {
+    public let family: String
+    public let size: Int
+    public let weight: String
+}
+
+public struct ColorStyle {
+    public let foreground: [String]
+    public let background: [String]
+}
+
+public struct BorderStyle {
+    public let width: Int
+    public let color: String
+    public let radius: Int
+}
+
+public struct UIStyle {
+    public let id: String
+    public let font: FontStyle
+    public let color: ColorStyle
+    public let border: BorderStyle
+}
 
 // MARK: - Response Container
 
 public struct SubscriptionResponse: Decodable {
     public var subscriptions: [StoreSubscription]
-   // public var packages: [SubscriptionPackage]?
+    public var styles: [UIStyle]?
 
     enum CodingKeys: String, CodingKey {
         case subscriptions
