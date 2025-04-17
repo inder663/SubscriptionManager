@@ -247,27 +247,27 @@ public struct StoreSubscription: Decodable {
 }
 
 public struct FontStyle {
-    public let family: String
-    public let size: Int
-    public let weight: String
+    public let family: String?
+    public let size: Int?
+    public let weight: String?
 }
 
 public struct ColorStyle {
-    public let foreground: [String]
-    public let background: [String]
+    public let foreground: [String]?
+    public let background: [String]?
 }
 
 public struct BorderStyle {
-    public let width: Int
-    public let color: String
-    public let radius: Int
+    public let width: Int?
+    public let color: String?
+    public let radius: Int?
 }
 
 public struct UIStyle {
     public let id: String
-    public let font: FontStyle
-    public let color: ColorStyle
-    public let border: BorderStyle
+    public let font: FontStyle?
+    public let color: ColorStyle?
+    public let border: BorderStyle?
 }
 
 // MARK: - Response Container
