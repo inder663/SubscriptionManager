@@ -95,7 +95,7 @@ public class RevenueCatManager: ObservableObject, ErrorManagable, SubscriptionMa
     }
 
     public func purchase(product: SubscriptionPackage) {
-        guard let revenuePackage = getAllProducts().first(where: {$0.identifier == product.id }) else {
+        guard let revenuePackage = getAllProducts().first(where: {$0.storeProduct.productIdentifier == product.id }) else {
             let message = "Product not found!"
             self.error = .init(message: message)
             return
