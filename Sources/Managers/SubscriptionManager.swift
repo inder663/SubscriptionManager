@@ -137,23 +137,31 @@ open class SubscriptionManager: ObservableObject, SubscriptionManageable, Loader
         }.store(in: &cancellable)
     }
 
-    public func restoreSubscription() {
+    public func restoreSubscription(completion:((Bool)->Void)?) {
         let type = conifuguration.type
         switch type {
         case .apphud(_):
-            apphudManager.restore()
+            apphudManager.restore() { isActive in
+                completion?(isActive)
+            }
         case .revenueCat(_, _):
-            revenueCatManager.restore()
+            revenueCatManager.restore() { isActive in
+                completion?(isActive)
+            }
         }
     }
 
-   public func purchase(package: SubscriptionPackage) {
+   public func purchase(package: SubscriptionPackage, completion:((Bool)->Void)?) {
         let type = conifuguration.type
         switch type {
         case .apphud(_):
-            apphudManager.purchase(product: package)
+            apphudManager.purchase(product: package) { isActive in
+                completion?(isActive)
+            }
         case .revenueCat(_, _):
-            revenueCatManager.purchase(product: package)
+            revenueCatManager.purchase(product: package) { isActive in
+                completion?(isActive)
+            }
         }
     }
 

@@ -94,10 +94,11 @@ public class RevenueCatManager: ObservableObject, ErrorManagable, SubscriptionMa
         return offerings?.current?.availablePackages ?? []
     }
 
-    public func purchase(product: SubscriptionPackage) {
+    public func purchase(product: SubscriptionPackage, completion:((Bool)->Void)?) {
         guard let revenuePackage = getAllProducts().first(where: {$0.storeProduct.productIdentifier == product.id }) else {
             let message = "Product not found!"
             self.error = .init(message: message)
+            completion?(false)
             return
         }
         isLoading = true
@@ -105,32 +106,43 @@ public class RevenueCatManager: ObservableObject, ErrorManagable, SubscriptionMa
             self?.isLoading = false
             if let error = error {
                 self?.error = .init(message: error.localizedDescription)
+                completion?(false)
                 return
             }
-            self?.updateSubscriptionStatus()
+            self?.updateSubscriptionStatus() { isActive in
+                completion?(isActive)
+            }
         }
     }
 
-    public func updateSubscriptionStatus() {
+    public func updateSubscriptionStatus(completion:((Bool)->Void)? = nil) {
         Purchases.shared.getCustomerInfo(completion: {[weak self] info, error in
             if let error = error {
                 self?.error = .init(message: error.localizedDescription)
+                completion?(false)
                 return
             }
-            guard let info = info else { return }
-            self?.isActive = info.entitlements.all[self?.entitlementId ?? ""]?.isActive == true
+            guard let info = info else {
+                completion?(false)
+                return }
+            let isActive = info.entitlements.all[self?.entitlementId ?? ""]?.isActive == true
+            self?.isActive = isActive
+            completion?(isActive)
         })
     }
 
-    public func restore() {
+    public func restore(completion:((Bool)->Void)?) {
         self.isLoading = true
         Purchases.shared.restorePurchases {[weak self] (purchaserInfo, error) in
             self?.isLoading = false
             if let error = error {
                 self?.error = .init(message: error.localizedDescription)
+                completion?(false)
                 return
             }
-            self?.updateSubscriptionStatus()
+            self?.updateSubscriptionStatus() { isActive in
+                completion?(isActive)
+            }
         }
     }
 }

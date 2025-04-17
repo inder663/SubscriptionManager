@@ -186,7 +186,7 @@ public class ApphudManager: ObservableObject, ErrorManagable, SubscriptionManage
 
     // Purchase
 
-    public func purchase(product: SubscriptionPackage) {
+    public func purchase(product: SubscriptionPackage, completion:((Bool)->Void)?) {
         guard let apphudProduct = getAllProducts().first(where: {$0.productId == product.id})  else {
             let message = "Product not found!"
             self.error = .init(message: message)
@@ -197,16 +197,19 @@ public class ApphudManager: ObservableObject, ErrorManagable, SubscriptionManage
             self?.isLoading = false
             if let subscription = result.subscription, subscription.isActive(){
                 self?.isActive = true
+                completion?(true)
             } else if let purchase = result.nonRenewingPurchase, purchase.isActive(){
                 self?.isActive = true
+                completion?(true)
             } else {
+                completion?(false)
                 let message = result.error?.localizedDescription ?? "Purchase failed!"
                 self?.error = .init(message: message)
             }
         }
     }
 
-    public func restore() {
+    public func restore(completion:((Bool)->Void)?) {
         isLoading = true
         Apphud.restorePurchases {[weak self] _, _, error in
             self?.isLoading = false
@@ -214,7 +217,9 @@ public class ApphudManager: ObservableObject, ErrorManagable, SubscriptionManage
                 let message = error.localizedDescription
                 self?.error = .init(message: message)
             }
-            self?.isActive = Apphud.hasActiveSubscription()
+            let isActive = Apphud.hasActiveSubscription()
+            self?.isActive = isActive
+            completion?(isActive)
         }
     }
 
