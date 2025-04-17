@@ -74,7 +74,7 @@ public class ApphudManager: ObservableObject, ErrorManagable, SubscriptionManage
             let style = paywallJson["styles"] as? [String: Any]
             let subscriptions =  paywallJson["subscriptions"] as? [String: Any]
             if !(style?.isEmpty ?? true) {
-                    styleJson["styles"] = value
+                    styleJson["styles"] = style
                 }
             if let _sub = subscriptions {
                 subscriptionsJson.append(_sub)
