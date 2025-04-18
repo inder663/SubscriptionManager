@@ -188,7 +188,7 @@ public struct SubscriptionPackage: Decodable {
         case daily, weekly, yearly
     }
 
-    public func getPriceString(duration: PriceDurationType) -> String {
+    public func getPriceString(duration: PriceDurationType, durationText: String? = nil) -> String {
         let price = self.price?.price ?? 0
         let subscriptionDuration = self.duration
         let numberFormatter = NumberFormatter()
@@ -228,7 +228,7 @@ public struct SubscriptionPackage: Decodable {
         let unitPrice = price / divideBy
         let priceString = numberFormatter.string(from: NSDecimalNumber(decimal: unitPrice)) ?? ""
 
-        return "\(priceString)/\(durationLabel)"
+        return "\(priceString)/\(durationText ?? durationLabel)"
     }
 
     mutating func update(price: SubscriptionPrice?) {
