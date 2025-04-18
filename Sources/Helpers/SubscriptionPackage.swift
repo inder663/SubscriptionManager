@@ -165,6 +165,7 @@ public struct SubscriptionPackage: Decodable {
     public var duration: SubscriptionDuration?
     public let offer: SubscriptionOffer?
 
+
     enum CodingKeys: String, CodingKey {
         case id
         case offer
@@ -183,6 +184,49 @@ public struct SubscriptionPackage: Decodable {
         return ""
     }
 
+    enum PriceDuration {
+        case daily, weekly, yearly
+    }
+
+    public func getPriceString(duration: PriceDurationType) -> String {
+        let price = self.price?.price ?? 0
+        let subscriptionDuration = self.duration
+        let numberFormatter = NumberFormatter()
+        numberFormatter.numberStyle = .currency
+
+        var daysInPeriod: Double = 0
+
+        switch subscriptionDuration {
+        case .days(let unit):
+            daysInPeriod = Double(unit)
+        case .weeks(let unit):
+            daysInPeriod = 7 * Double(unit)
+        case .months(let unit):
+            daysInPeriod = 30.4 * Double(unit) // Avg month
+        case .years(let unit):
+            daysInPeriod = 365 * Double(unit)
+        default:
+            daysInPeriod = 1 // fallback to 1 day
+        }
+
+        var divideBy: Decimal = 1
+
+        switch duration {
+        case .daily:
+            divideBy = Decimal(daysInPeriod)
+        case .weekly:
+            divideBy = Decimal(daysInPeriod / 7.0)
+        case .yearly:
+            divideBy = Decimal(daysInPeriod / 365.0)
+        case .display:
+            return displayPrice
+        }
+
+        let unitPrice = price / divideBy
+        let priceString = numberFormatter.string(from: NSDecimalNumber(decimal: unitPrice))
+        return priceString ?? ""
+    }
+
     mutating func update(price: SubscriptionPrice?) {
         self.price = price
     }
@@ -191,6 +235,12 @@ public struct SubscriptionPackage: Decodable {
         self.duration = duration
     }
 
+}
+
+public extension SubscriptionPackage {
+    enum PriceDurationType {
+        case daily, weekly, yearly, display
+    }
 }
 
 // MARK: - Paywall Placeholder
