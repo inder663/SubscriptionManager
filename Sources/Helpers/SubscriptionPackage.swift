@@ -175,7 +175,7 @@ public struct SubscriptionPackage: Decodable {
         let numberFormatter = NumberFormatter()
         numberFormatter.numberStyle = .currency
         numberFormatter.locale = .current
-        
+
         if let priceDecimal = price?.price {
             let priceString = numberFormatter.string(from: NSNumber(value: priceDecimal.doubleValue)) ?? "-"
             let duration = duration?.getDuration(format: .durationAdjective) ?? ""
@@ -210,21 +210,25 @@ public struct SubscriptionPackage: Decodable {
         }
 
         var divideBy: Decimal = 1
-
+        var durationLabel = ""
         switch duration {
         case .daily:
             divideBy = Decimal(daysInPeriod)
+            durationLabel = "daily"
         case .weekly:
             divideBy = Decimal(daysInPeriod / 7.0)
+            durationLabel = "weekly"
         case .yearly:
             divideBy = Decimal(daysInPeriod / 365.0)
+            durationLabel = "yearly"
         case .display:
             return displayPrice
         }
 
         let unitPrice = price / divideBy
-        let priceString = numberFormatter.string(from: NSDecimalNumber(decimal: unitPrice))
-        return priceString ?? ""
+        let priceString = numberFormatter.string(from: NSDecimalNumber(decimal: unitPrice)) ?? ""
+
+        return "\(priceString)/\(durationLabel)"
     }
 
     mutating func update(price: SubscriptionPrice?) {
