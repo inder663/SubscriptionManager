@@ -102,11 +102,23 @@ public class ApphudManager: ObservableObject, ErrorManagable, SubscriptionManage
                     if let appStoreProduct = product.product {
                         if  var subscriptionPack = subscription.packages?.first(where: {$0.id == appStoreProduct.id }) {
                             let duration = getDuration(product: appStoreProduct)
-                            let price: SubscriptionPrice = .init(price: appStoreProduct.price)
+
+
+                            var numberFormatter = NumberFormatter()
+                            let priceLocale = product.skProduct?.priceLocale
+                            numberFormatter.numberStyle = .currency
+                            numberFormatter.locale = priceLocale
+                            numberFormatter.currencyCode = priceLocale?.currencyCode
+                            numberFormatter.currencySymbol = priceLocale?.currencySymbol
+
+
+                            let price: SubscriptionPrice = SubscriptionPrice(price: appStoreProduct.price)
                             subscriptionPack.update(price: price)
                             subscriptionPack.update(duration: duration)
                             subscription.update(package: subscriptionPack)
+                            subscriptionPack.update(formatter: numberFormatter)
                             subscriptionResponse?.update(subscription: subscription)
+
                         }
                     }
                 }

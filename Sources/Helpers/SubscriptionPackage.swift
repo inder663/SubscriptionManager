@@ -8,7 +8,6 @@
 import Foundation
 import SwiftUI
 
-
 // MARK: - Enums
 
 public enum StateType: String, Codable, Sendable {
@@ -164,7 +163,7 @@ public struct SubscriptionPackage: Decodable {
     public var price: SubscriptionPrice?
     public var duration: SubscriptionDuration?
     public let offer: SubscriptionOffer?
-
+    private var numberFormatter: NumberFormatter?
 
     enum CodingKeys: String, CodingKey {
         case id
@@ -172,12 +171,9 @@ public struct SubscriptionPackage: Decodable {
     }
 
     public var displayPrice: String {
-        let numberFormatter = NumberFormatter()
-        numberFormatter.numberStyle = .currency
-        numberFormatter.locale = .current
 
         if let priceDecimal = price?.price {
-            let priceString = numberFormatter.string(from: NSNumber(value: priceDecimal.doubleValue)) ?? "-"
+            let priceString = numberFormatter?.string(from: NSNumber(value: priceDecimal.doubleValue)) ?? "-"
             let duration = duration?.getDuration(format: .durationAdjective) ?? ""
             return priceString + "/" + duration
         }
@@ -191,8 +187,6 @@ public struct SubscriptionPackage: Decodable {
     public func getPriceString(duration: PriceDurationType, durationText: String? = nil) -> String {
         let price = self.price?.price ?? 0
         let subscriptionDuration = self.duration
-        let numberFormatter = NumberFormatter()
-        numberFormatter.numberStyle = .currency
 
         var daysInPeriod: Double = 0
 
@@ -226,7 +220,7 @@ public struct SubscriptionPackage: Decodable {
         }
 
         let unitPrice = price / divideBy
-        let priceString = numberFormatter.string(from: NSDecimalNumber(decimal: unitPrice)) ?? ""
+        let priceString = numberFormatter?.string(from: NSDecimalNumber(decimal: unitPrice)) ?? ""
 
         return "\(priceString)/\(durationText ?? durationLabel)"
     }
@@ -237,6 +231,10 @@ public struct SubscriptionPackage: Decodable {
 
     mutating func update(duration: SubscriptionDuration?) {
         self.duration = duration
+    }
+
+    mutating func update(formatter: NumberFormatter?) {
+        self.numberFormatter = formatter
     }
 
 }
