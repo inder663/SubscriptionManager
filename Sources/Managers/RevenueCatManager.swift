@@ -67,7 +67,7 @@ public class RevenueCatManager: ObservableObject, ErrorManagable, SubscriptionMa
                         subscriptionPack.update(duration: duration)
                         subscriptionPack.update(formatter: numberFormatter)
                         subscription.update(package: subscriptionPack)
-                        s
+                        
 
                     }
                 }
