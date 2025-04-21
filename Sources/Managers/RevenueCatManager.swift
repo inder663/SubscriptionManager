@@ -60,13 +60,20 @@ public class RevenueCatManager: ObservableObject, ErrorManagable, SubscriptionMa
                 if let appStoreProduct = product {
                     if  var subscriptionPack = subscription.packages?.first(where: {$0.id == appStoreProduct.productIdentifier }) {
                         let duration = getDuration(product: appStoreProduct)
-                        let formatter = appStoreProduct.priceFormatter
                         var price = SubscriptionPrice(price: appStoreProduct.price)
+
+                        var numberFormatter = NumberFormatter()
+                        let priceLocale = appStoreProduct.sk1Product?.priceLocale
+                        numberFormatter.numberStyle = .currency
+                        numberFormatter.locale = priceLocale
+                        numberFormatter.currencyCode = priceLocale?.currencyCode
+                        numberFormatter.currencySymbol = priceLocale?.currencySymbol
+
 
                         subscriptionPack.update(price: price)
                         subscriptionPack.update(duration: duration)
                         subscription.update(package: subscriptionPack)
-                        subscriptionPack.update(formatter: formatter)
+                        subscriptionPack.update(formatter: numberFormatter)
 
                     }
                 }
