@@ -62,14 +62,7 @@ public class RevenueCatManager: ObservableObject, ErrorManagable, SubscriptionMa
                         let duration = getDuration(product: appStoreProduct)
                         var price = SubscriptionPrice(price: appStoreProduct.price)
 
-                        var numberFormatter = NumberFormatter()
-                        let priceLocale = appStoreProduct.sk1Product?.priceLocale
-                        numberFormatter.numberStyle = .currency
-                        numberFormatter.locale = priceLocale
-                        numberFormatter.currencyCode = priceLocale?.currencyCode
-                        numberFormatter.currencySymbol = priceLocale?.currencySymbol
-
-
+                        var numberFormatter = appStoreProduct.priceFormatter
                         subscriptionPack.update(price: price)
                         subscriptionPack.update(duration: duration)
                         subscription.update(package: subscriptionPack)
