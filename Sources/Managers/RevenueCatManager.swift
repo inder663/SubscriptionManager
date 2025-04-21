@@ -65,8 +65,9 @@ public class RevenueCatManager: ObservableObject, ErrorManagable, SubscriptionMa
                         var numberFormatter = appStoreProduct.priceFormatter
                         subscriptionPack.update(price: price)
                         subscriptionPack.update(duration: duration)
-                        subscription.update(package: subscriptionPack)
                         subscriptionPack.update(formatter: numberFormatter)
+                        subscription.update(package: subscriptionPack)
+                        s
 
                     }
                 }

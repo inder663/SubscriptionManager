@@ -115,8 +115,10 @@ public class ApphudManager: ObservableObject, ErrorManagable, SubscriptionManage
                             let price: SubscriptionPrice = SubscriptionPrice(price: appStoreProduct.price)
                             subscriptionPack.update(price: price)
                             subscriptionPack.update(duration: duration)
-                            subscription.update(package: subscriptionPack)
                             subscriptionPack.update(formatter: numberFormatter)
+
+                            subscription.update(package: subscriptionPack)
+                            
                             subscriptionResponse?.update(subscription: subscription)
 
                         }
