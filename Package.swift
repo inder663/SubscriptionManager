@@ -26,6 +26,7 @@ let package = Package(
             dependencies:[
                 "ApphudSDK",
                 .product(name: "RevenueCat", package: "purchases-ios"),
+                .product(name: "RevenueCatUI", package: "purchases-ios")
             ]
 
         ),
