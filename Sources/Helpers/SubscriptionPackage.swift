@@ -263,6 +263,7 @@ public struct StoreSubscription: Decodable {
     public let singlePackText: String?
     public let isShowCloseButton: Bool?
     public let isShowSkipButton: Bool?
+    public let isWeb: Bool?
     public let titleStyleId: String?
     public let subTitleStyleId: String?
     public let continueButtonStyleId: String?
@@ -277,6 +278,7 @@ public struct StoreSubscription: Decodable {
         case isShowCloseButton
         case singlePackText
         case isShowSkipButton
+        case isWeb
         case packages
         case titleStyleId
         case subTitleStyleId
