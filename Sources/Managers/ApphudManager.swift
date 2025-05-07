@@ -94,6 +94,10 @@ public class ApphudManager: ObservableObject, ErrorManagable, SubscriptionManage
         }
     }
 
+    public func updateSubscriptionStatus() {
+        self.isActive = Apphud.hasActiveSubscription()
+    }
+    
     private func loadPackages() {
         let allPaywalls = placements.map({$0.paywall})
         for paywall in allPaywalls {

@@ -20,16 +20,18 @@ open class SubscriptionManager: ObservableObject, SubscriptionManageable, Loader
     @Published public var subscriptionResponse: SubscriptionResponse?
     private let conifuguration: SubscriptionManager.Configuration
     private var cancellable = Set<AnyCancellable>()
-
+    private var isAppHud = false
     public init(_ configuration: SubscriptionManager.Configuration) {
         self.conifuguration = configuration
         switch configuration.type {
         case .apphud(let key):
+            self.isAppHud = true
             self.apphudManager = ApphudManager(key: key)
             self.revenueCatManager = RevenueCatManager(key: "", entitlementId: "")
             setupApphudBinding()
             apphudManager.start()
         case .revenueCat(let key, let entitlementId):
+            self.isAppHud = false
             self.revenueCatManager = RevenueCatManager(key: key, entitlementId: entitlementId)
             self.apphudManager = ApphudManager(key: "")
             setupRevenueCatBinding()
@@ -173,6 +175,17 @@ open class SubscriptionManager: ObservableObject, SubscriptionManageable, Loader
 
     open func getStyles() -> [UIStyle] {
         subscriptionResponse?.styles ?? []
+    }
+
+    open func forceUpdateSubscritonStatus() {
+        if isAppHud {
+            apphudManager.updateSubscriptionStatus()
+        } else {
+            revenueCatManager.updateSubscriptionStatus() { isActive in
+                self.isActive = isActive
+            }
+        }
+
     }
 
 }
