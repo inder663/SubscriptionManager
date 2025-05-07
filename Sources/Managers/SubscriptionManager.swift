@@ -35,6 +35,7 @@ open class SubscriptionManager: ObservableObject, SubscriptionManageable, Loader
             setupRevenueCatBinding()
             revenueCatManager.start()
         }
+        restoreSubscription()
     }
 
     private func setupApphudBinding() {
