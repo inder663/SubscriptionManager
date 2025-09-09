@@ -1,0 +1,24 @@
+{
+  "originHash" : "b8fd320f8eda40df5ea19a5c579c563ee7d5ae823f8170c20584fe29f207fac4",
+  "pins" : [
+    {
+      "identity" : "apphudsdk",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/apphud/ApphudSDK.git",
+      "state" : {
+        "revision" : "a4d2b93384cc67fa6a853465ff345be6f84b0a72",
+        "version" : "3.6.2"
+      }
+    },
+    {
+      "identity" : "purchases-ios",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/RevenueCat/purchases-ios.git",
+      "state" : {
+        "revision" : "0f7f5897afbf4cd411171d420e4d6cb5b46bc18d",
+        "version" : "5.27.1"
+      }
+    }
+  ],
+  "version" : 3
+}

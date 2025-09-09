@@ -16,7 +16,7 @@ let package = Package(
     ],
     dependencies: [
         .package(url: "https://github.com/apphud/ApphudSDK.git", exact: "3.6.2"),
-        .package(url: "https://github.com/RevenueCat/purchases-ios.git", exact: "5.20.3")
+        .package(url: "https://github.com/RevenueCat/purchases-ios.git", exact: "5.27.1")
     ],
     targets: [
         // Targets are the basic building blocks of a package, defining a module or a test suite.
